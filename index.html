@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portefolio</title>
+    <link rel="icon" type="image/png" href="image/logo_joe_pasouf_mieux.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+ <div id="header">
+    <video autoplay muted loop id="background-video">
+        <source src="video/header_background2.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo HTML5.
+    </video>
+
+    <div class="center" id="headerc">
+        <div class="middle">
+            <h1>JOE</h1>
+            <ul class="wrapper">
+   <li class="icon instagram">
+    <a href="https://www.instagram.com/_joe.studio_?igsh=MXN0cWFkZXgwOWFoNA==" target="_blank" rel="noopener noreferrer">
+        <span><i class="fab fa-instagram"></i></span>
+    </a>
+  </li>
+  <li class="icon linkedin">
+    <a href="https://www.linkedin.com/in/jo%C3%A9line-provost-217516382/" target="_blank" rel="noopener noreferrer">
+        <span><i class="fab fa-linkedin"></i></span>
+    </a>
+  </li>
+  <li class="icon youtube">
+    <a href="https://www.youtube.com/@joe-studioo/shorts" target="_blank" rel="noopener noreferrer">
+        <span><i class="fab fa-youtube"></i></span>
+    </a>
+  </li>
+  <!--
+  <li class="icon github">
+    <a href="https://github.com/votre-username" target="_blank" rel="noopener noreferrer">
+        <span><i class="fab fa-github"></i></span>
+    </a>
+  </li>-->
+</ul>
+        </div>
+    </div>
+</div>
+
+    <!-- Spacer pour permettre le scroll -->
+    <div id="spacer"></div>
+
+    <!-- Indicateur losange -->
+    <div id="pageHr"> 
+        <i><i></i></i>
+    </div>
+
+    <!-- Page de contenu avec les cartes -->
+    <div id="page">
+        <div id="container" class="container"></div>
+    </div>
+
+    <!-- Modal vidéo -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-container">
+            <button class="close-btn" onclick="closeVideo()">×</button>
+            <video id="modalVideo" controls></video>
+        </div>
+    </div>
+
+
+
+<script src="script.js"></script>
+</body>
+</html>
