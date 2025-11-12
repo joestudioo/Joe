@@ -74,11 +74,11 @@ window.addEventListener('scroll', function() {
             
             if (pageHr) {
                 const maxScroll = windowHeight;
-                // Clamper le scroll à 0 pour éviter les valeurs négatives sur mobile
                 const clampedScroll = Math.max(0, st);
                 const progress = Math.min(clampedScroll / maxScroll, 1);
-                // Utiliser transform avec will-change pour de meilleures performances
-                pageHr.style.transform = `translateY(-${progress * windowHeight}px)`;
+                const translateValue = -progress * windowHeight;
+                // Pas d'animation, changement direct
+                pageHr.style.transform = `translateY(${translateValue}px)`;
             }
             
             ticking = false;

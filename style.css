@@ -89,9 +89,6 @@
             left: 0px;
             bottom: 0;
             z-index: 10;
-            transform: translateY(0);
-            transition: none;
-            will-change: transform;
         }
 
         #pageHr > i {
