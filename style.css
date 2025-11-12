@@ -1,10 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-@import url("https://db.onlinewebfonts.com/c/5712300ca33eb45675450014faeae822?family=Migration+Sans+ITC+W01+Italic"); /* police pour h1 joe */
-
 * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        @font-face { /* police pour h1 joe */
+            font-family: "Migration Sans ITC W01 Italic";
+            src: url("font/Migration_Sans_ITC_W01_Italic.woff2") format("woff2"),
+            url("font/Migration_Sans_ITC_W01_Italic.woff") format("woff");
+            font-display: swap;
         }
 
         html, body {
@@ -18,7 +22,7 @@
         }
 
         #header {
-            background: url(header_background.mp4) no-repeat center top;
+            background: url(video/header_background2.mp4) no-repeat center top;
             background-size: cover;
             position: fixed;
             height: 100vh;

@@ -4,42 +4,48 @@ const cards = [
         thumbnail: "image/miaouu.png",
         video: "video/miaouu.mp4",
         author: "Joe",
-        logo: "image/logo_joe_pasouf_mieux.png"
+        logo: "image/logo_joe_pasouf_mieux.png",
+        volume: 1.0
     },
     {
         title: "The Time",
         thumbnail: "image/the_time.png",
         video: "video/the_time.mp4",
         author: "Joe",
-        logo: "image/logo_joe_pasouf_mieux.png"
+        logo: "image/logo_joe_pasouf_mieux.png",
+        volume: 0.3
     },
     {
         title: "The Flower",
         thumbnail: "image/the_flower.png",
         video: "video/the_flower.mp4",
         author: "Joe",
-        logo: "image/logo_joe_pasouf_mieux.png"
+        logo: "image/logo_joe_pasouf_mieux.png",
+        volume: 0.6
     },
     {
         title: "The Escalators",
         thumbnail: "image/the_escalators.png",
         video: "video/the_escalators.mp4",
         author: "Joe",
-        logo: "image/logo_joe_pasouf_mieux.png"
+        logo: "image/logo_joe_pasouf_mieux.png",
+        volume: 0.4
     },
     {
         title: "Good Dog",
         thumbnail: "image/chien.avif",
         video: "video/good_dog.mp4",
         author: "Joe",
-        logo: "image/logo_joe_pasouf_mieux.png"
+        logo: "image/logo_joe_pasouf_mieux.png",
+        volume: 0.5
     },
     {
         title: "joe",
         thumbnail: "image/joe.png",
         video: "video/joe.mp4",
         author: "Joe",
-        logo: "image/logo_joe_pasouf_mieux.png"
+        logo: "image/logo_joe_pasouf_mieux.png",
+        volume: 0.5
     }
 ];
 
@@ -47,28 +53,40 @@ let highestZIndex = 10;
 let draggedCard = null;
 let offsetX = 0;
 let offsetY = 0;
+let ticking = false;
 
 window.addEventListener('scroll', function() {
-    const st = window.pageYOffset || document.documentElement.scrollTop;
-    const header = document.getElementById('header');
-    const headerc = document.getElementById('headerc');
-    const pageHr = document.getElementById('pageHr');
-    const windowHeight = window.innerHeight;
-    
-    if (header) {
-        header.style.backgroundPositionY = (-st/20) + 'px';
+    if (!ticking) {
+        window.requestAnimationFrame(function() {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            const header = document.getElementById('header');
+            const headerc = document.getElementById('headerc');
+            const pageHr = document.getElementById('pageHr');
+            const windowHeight = window.innerHeight;
+            
+            if (header) {
+                header.style.backgroundPositionY = (-st/20) + 'px';
+            }
+            if (headerc) {
+                headerc.style.top = (-st/5) + 'px';
+                headerc.style.bottom = (st/5) + 'px';
+            }
+            
+            if (pageHr) {
+                const maxScroll = windowHeight;
+                // Clamper le scroll à 0 pour éviter les valeurs négatives sur mobile
+                const clampedScroll = Math.max(0, st);
+                const progress = Math.min(clampedScroll / maxScroll, 1);
+                // Utiliser transform avec will-change pour de meilleures performances
+                pageHr.style.transform = `translateY(-${progress * windowHeight}px)`;
+            }
+            
+            ticking = false;
+        });
+        
+        ticking = true;
     }
-    if (headerc) {
-        headerc.style.top = (-st/5) + 'px';
-        headerc.style.bottom = (st/5) + 'px';
-    }
-    
-    if (pageHr) {
-        const maxScroll = windowHeight;
-        const progress = Math.min(st / maxScroll, 1);
-        pageHr.style.transform = `translateY(-${progress * windowHeight}px)`;
-    }
-});
+}, { passive: true });
 
 function calculateLayout() {
     const container = document.getElementById('container');
@@ -120,7 +138,7 @@ function layoutMobile() {
         const cardHeight = cardWidth * aspectRatio;
         
         positions.push({
-            x: 0, // Position relative, sera centrée par le CSS
+            x: 0,
             y: currentY,
             width: cardWidth,
             height: cardHeight,
@@ -130,13 +148,11 @@ function layoutMobile() {
         currentY += cardHeight + spacing;
     });
     
-    // Ajuster la hauteur du container en fonction du contenu
     const container = document.getElementById('container');
     if (container) {
         container.style.minHeight = `${currentY + 20}px`;
     }
     
-    // Ajuster la hauteur de #page pour qu'elle couvre tout le contenu
     const page = document.getElementById('page');
     if (page) {
         page.style.minHeight = `${currentY + 60}px`;
@@ -163,11 +179,9 @@ function createCard(cardData, index, position, isMobile) {
     card.className = 'card';
     
     if (isMobile) {
-        // En mode mobile, on utilise position relative pour le centrage automatique
         card.style.position = 'relative';
         card.style.marginTop = index === 0 ? '0' : '20px';
     } else {
-        // En mode desktop, on garde la position absolue
         card.style.position = 'absolute';
         card.style.left = `${position.x}px`;
         card.style.top = `${position.y}px`;
@@ -196,7 +210,7 @@ function createCard(cardData, index, position, isMobile) {
     }
 
     const content = card.querySelector('.card-content');
-    content.addEventListener('click', () => playVideo(cardData.video));
+    content.addEventListener('click', () => playVideo(cardData.video, cardData.volume || 0.5));
 
     return card;
 }
@@ -250,11 +264,12 @@ function stopDrag() {
     document.removeEventListener('touchend', stopDrag);
 }
 
-function playVideo(videoPath) {
+function playVideo(videoPath, volume = 0.5) {
     const modal = document.getElementById('videoModal');
     const video = document.getElementById('modalVideo');
     
     video.src = videoPath;
+    video.volume = volume;
     modal.classList.add('active');
     video.play();
 }
