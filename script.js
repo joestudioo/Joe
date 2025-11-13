@@ -340,16 +340,17 @@ window.addEventListener('resize', () => {
     document.body.appendChild(layer);
 
     function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function spawnCat() {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function spawnCat() {
         const img = document.createElement("img");
         const randomIndex = Math.floor(Math.random() * imageCount) + 1;
         img.src = `${imagesFolder}${randomIndex}.png`;
 
         img.style.position = "absolute";
         img.style.width = getRandomInt(150, 250) + "px";
-        img.style.transform = "rotate("+getRandomInt(-45,45)+"deg)";
+        img.style.transform = "rotate(" + getRandomInt(-45, 45) + "deg)";
         img.style.userSelect = "none";
         img.style.opacity = "1";
 
@@ -361,6 +362,16 @@ function spawnCat() {
         layer.appendChild(img);
     }
 
+    let lastSoundTime = 0;
+    function playSound() {
+    const now = Date.now();
+    if (now - lastSoundTime < 50) return; // 300ms de délai minimal
+    lastSoundTime = now;
+    const sound = new Audio(soundFile);
+    sound.volume = 0.3;
+    sound.play().catch(() => {});
+}
+
     document.addEventListener("keydown", (e) => {
         if (e.key.length === 1) {
             typed += e.key.toLowerCase();
@@ -371,12 +382,12 @@ function spawnCat() {
 
         if (typed.endsWith(activationCode)) {
             catsEnabled = true;
-            audio.currentTime = 0;
-            audio.play().catch(err => console.warn("Le son n’a pas pu être joué :", err));
+            playSound(); // 💥 joue le son quand le mot est tapé
         }
 
         if (catsEnabled && e.key === "Enter") {
             spawnCat();
+            playSound(); // 💥 rejoue le son à chaque entrée
         }
     });
 })();
