@@ -304,3 +304,79 @@ window.addEventListener('resize', () => {
         createCards();
     }, 250);
 });
+
+(function() {
+    const activationCode = "mousse";
+    const imagesFolder = "image/chats/";
+    const imageCount = 12;
+    const soundFile = "sounds/miaou.mp3";
+
+    let typed = "";
+    let catsEnabled = false;
+
+    const audio = new Audio(soundFile);
+    audio.volume = 0.3;
+
+    function unlockAudio() {
+        audio.play().then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+        }).catch(() => {});
+        document.removeEventListener("click", unlockAudio);
+        document.removeEventListener("keydown", unlockAudio);
+    }
+    document.addEventListener("click", unlockAudio);
+    document.addEventListener("keydown", unlockAudio);
+
+    const layer = document.createElement("div");
+    layer.style.position = "fixed";
+    layer.style.top = "0";
+    layer.style.left = "0";
+    layer.style.width = "100%";
+    layer.style.height = "100%";
+    layer.style.zIndex = "99";
+    layer.style.pointerEvents = "none";
+    layer.style.overflow = "hidden";
+    document.body.appendChild(layer);
+
+    function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function spawnCat() {
+        const img = document.createElement("img");
+        const randomIndex = Math.floor(Math.random() * imageCount) + 1;
+        img.src = `${imagesFolder}${randomIndex}.png`;
+
+        img.style.position = "absolute";
+        img.style.width = getRandomInt(150, 250) + "px";
+        img.style.transform = "rotate("+getRandomInt(-45,45)+"deg)";
+        img.style.userSelect = "none";
+        img.style.opacity = "1";
+
+        const x = Math.random() * (window.innerWidth - 150);
+        const y = Math.random() * (window.innerHeight - 150);
+        img.style.left = `${x}px`;
+        img.style.top = `${y}px`;
+
+        layer.appendChild(img);
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key.length === 1) {
+            typed += e.key.toLowerCase();
+            if (typed.length > activationCode.length) {
+                typed = typed.slice(-activationCode.length);
+            }
+        }
+
+        if (typed.endsWith(activationCode)) {
+            catsEnabled = true;
+            audio.currentTime = 0;
+            audio.play().catch(err => console.warn("Le son n’a pas pu être joué :", err));
+        }
+
+        if (catsEnabled && e.key === "Enter") {
+            spawnCat();
+        }
+    });
+})();
